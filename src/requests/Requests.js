@@ -10,7 +10,7 @@ export const loadNotes = async () => {
   }
 };
 
-export const setNotes = async (noute) => {
+export const addNotes = async (noute) => {
   try {
     const response = await axios.post(`${url}/noutes`, noute);
     return response;
@@ -21,9 +21,16 @@ export const setNotes = async (noute) => {
 
 export const deleteNotes = async (id) => {
   try {
-    const res = await axios.delete(`${url}/noutes/${id}`);
-    return res;
+    await axios.delete(`${url}/noutes/${id}`);
+
   } catch (err) {
+    throw new Error(`Could not fetch ${url}`);
+  }
+};
+export const updateNotes = async (id, data) => {
+  try {
+     await axios.put(`${url}/noutes/${id}`,data);
+   } catch (err) {
     throw new Error(`Could not fetch ${url}`);
   }
 };

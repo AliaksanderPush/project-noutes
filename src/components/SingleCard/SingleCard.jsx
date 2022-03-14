@@ -3,7 +3,7 @@ import { Card, Button, Stack } from "react-bootstrap";
 import { formatDateTime } from "../../helpers/getDate";
 import "./SingleCard.scss";
 
-export const SingleCard = ({ info, handleDeleteNoute }) => {
+export const SingleCard = ({ info, handleDeleteNoute, handleEditNoutes }) => {
   const dt = new Date();
   const date = formatDateTime(dt);
   const { id, title, text } = info;
@@ -16,7 +16,10 @@ export const SingleCard = ({ info, handleDeleteNoute }) => {
           <Card.Title>{title}</Card.Title>
           <Card.Text>{text}</Card.Text>
           <Stack direction="horizontal" gap={3}>
-            <Button variant="outline-dark" size="sm">
+            <Button 
+            onClick={() => handleEditNoutes(id)}
+            variant="outline-dark"
+            size="sm">
               Редактировать
             </Button>
             <div />
