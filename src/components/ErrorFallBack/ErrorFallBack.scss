@@ -1,0 +1,19 @@
+.error {
+  color: red;
+  position: absolute;
+  width: 430px;
+  height: 110px;
+  left: calc(50% - 215px);
+  top: calc(50% + 105px);
+}
+.error p,
+pre {
+  text-align: center;
+}
+.error > button {
+  background-color: blue;
+  color: white;
+  position: absolute;
+  width: 80px;
+  left: calc(50% - 40px);
+}
