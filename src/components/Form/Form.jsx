@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import uniqid from "uniqid";
 import { Row, Col, Button } from "react-bootstrap";
 import { Spiner } from "..";
-import { addNotes, deleteNotes, loadNotes, updateNotes } from "../../requests/Requests";
 import { CardList } from "..";
+import { addNotes, deleteNotes, loadNotes, updateNotes } from "../../requests/Requests";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 import "./Form.scss";
 
@@ -14,6 +17,9 @@ export const Form = () => {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
   const [editId, setEditId] = useState("");
+
+
+  const closeAfter = () => toast.success("7 Kingdoms", { autoClose: 2000, position: toast.POSITION.TOP_CENTER });
 
   const handleLoadNoutes = () => {
     loadNotes().then((response) => setData(response.data));
@@ -48,6 +54,7 @@ export const Form = () => {
       };
       addNotes(noute).then((res) => setData([...data, res.data]));
       clearState();
+      closeAfter();
    } else {
       const copyData = [...data];
       const index = copyData.findIndex(item => item.id === editId);
