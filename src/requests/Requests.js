@@ -2,8 +2,12 @@ import { url } from "../helpers/url";
 import axios from "axios";
 
 export const loadNotes = async () => {
-  const response = await axios.get(`${url}/noutes`);
-  return response.data;
+  try {
+    const response = await axios.get(`${url}/noutes`);
+    return response;
+  } catch {
+    throw new Error(`Could not fetch ${url}`);
+  }
 };
 
 export const addNotes = async (noute) => {
