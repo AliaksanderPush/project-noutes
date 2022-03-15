@@ -11,9 +11,12 @@
       "text": "Hello!"
     },
     {
-      "id": "l0qkk1vf",
-      "title": "sas!",
-      "text": "sasaEdit!"
+      "id": "l0s1n0ik",
+      "title": "My tag",
+      "text": "my #tag!",
+      "tag": [
+        "#tag"
+      ]
     }
   ],
   "requests": []

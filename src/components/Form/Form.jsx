@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { getTag } from "../../helpers/getTag";
 import uniqid from "uniqid";
+import ReactHtmlParser from "react-html-parser";
 import { Row, Col, Button } from "react-bootstrap";
 import { Spiner } from "..";
 import { CardList } from "..";
@@ -21,6 +23,8 @@ export const Form = () => {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(true);
   const [editId, setEditId] = useState("");
+  const [tag, setTag] = useState([]);
+  const [serchTag, setSearchTag] = useState('');
 
   const closeAfter = () =>
     toast.success("7 Kingdoms", {
@@ -40,6 +44,10 @@ export const Form = () => {
     setTextValue(e.target.value);
   };
 
+  const handleSearchTag = (e) => {
+    setSearchTag(e.target.value);
+  }
+
   const handleEditNoutes = (id) => {
     const copyData = [...data];
     const editNoute = copyData.find((item) => item.id === id);
@@ -52,14 +60,18 @@ export const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+     
     if (!editId) {
       const id = uniqid();
+      const tags = searchTag(textValue);
       const noute = {
         id,
         title: inpValue,
         text: textValue,
+        tag: tags || " "
       };
-      addNotes(noute).then((res) => setData([...data, res.data]));
+      setData([...data, noute]); 
+      addNotes(noute); 
       clearState();
       closeAfter();
     } else {
@@ -82,6 +94,31 @@ export const Form = () => {
     setData(newData);
   };
 
+  const  searchTag = (text) => {
+     let arr = text.split(" ");
+     let array = [];
+     for (let i = 0; i < arr.length; i++) {
+      if (arr[i][0] === "#") {
+        array.push(arr[i]);
+      }
+    }
+    if (!array.length) return;
+    for(const word of array) {
+      setTag([...tag, word]);
+    }
+       return array;
+  }
+
+ const  seachTag = () => {
+    if (serchTag && data.length ) {
+      console.log('search>>>',serchTag );
+      console.log('data>>>', data);
+      const noute = data.find(item => getTag(item.tag, serchTag));
+      console.log('noute>>>', noute);
+    }
+ }
+
+
   function clearState() {
     setInputValue("");
     setTextValue("");
@@ -91,13 +128,24 @@ export const Form = () => {
   useEffect(() => {
     handleLoadNoutes();
   }, []);
+ 
+  if (!data) return <div/>
 
   return (
     <>
-      {load ? <Spiner /> : null}
+   {load ? <Spiner /> : null}
+   <Row className="justify-content-center">
+     <Col className="_left_col">
+       <p className=" mb-0">Поиск по тэгу:</p>
+       <input type='text' value={serchTag} onChange={handleSearchTag} />
+       <Button className="mt-2" variant="primary" size="sm" onClick={seachTag} >
+      Найти
+    </Button>{' '}
+     </Col>
+      <Col xs={6} mt={4} md="auto" className="_midle_col">
       <form className="mb-3" onSubmit={handleSubmit}>
         <Row className="justify-content-center">
-          <Col xs={6} mt={4} md="auto" className="colona">
+          <Col>
             <p className=" mb-0">Заметка:</p>
             <input
               className="main_input"
@@ -123,7 +171,14 @@ export const Form = () => {
           </Col>
         </Row>
       </form>
-
+      </Col>
+      <Col className="_right_col">
+        {data?.map((item, i) => {
+          return <p key={item + i} >{ Array.isArray(item.tag) ? item.tag.join(',') : item.tag}</p>
+        })}
+      </Col>
+   </Row>
+        
       <CardList
         data={data}
         handleDeleteNoute={handleDeleteNoute}
@@ -131,4 +186,4 @@ export const Form = () => {
       />
     </>
   );
-};
+}
